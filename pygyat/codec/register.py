@@ -13,16 +13,27 @@ def pygyat_transform(stream):
 
 def pygyat_transform_string(text):
     output = parse_file_contents(text)
-    return output
+    #return 'print("hi")\n'.encode('utf-8')
+    return output.encode('utf-8')
+
+def pygyat_decode(input, errors='strict'):
+    return utf_8.decode(pygyat_transform_string(input), errors)
 
 class PyGyatIncrementalDecoder(utf_8.IncrementalDecoder):
     def decode(self, input, final=False):
+        if input != b'':
+            print('call %s' % input, final)
         self.buffer += input
         if final:
+            print('final called with %s' % input)
             buff = self.buffer
-            self.buffer = ''
-            return super(PyGyatIncrementalDecoder, self).decode(
-                pygyat_transform_string(buff), final=True)
+            #return super().decode(buff, final=True)
+            retval = super(PyGyatIncrementalDecoder, self).decode(pygyat_transform_string(buff.decode('utf-8')), final=True)
+            print(retval)
+            self.buffer = b''
+            return retval
+        else:
+            return ''
 
 class PyGyatStreamReader(utf_8.StreamReader):
     def __init__(self, *args, **kwargs):
@@ -35,10 +46,13 @@ def search_function(encoding):
     return codecs.CodecInfo(
         name = 'pygyat',
         encode=utf8.encode,
-        decode=pyxl_decode,
+        #decode=utf8.decode,
+        decode=pygyat_decode,
         incrementalencoder = utf8.incrementalencoder,
+        #incrementaldecoder = utf8.incrementaldecoder,
         incrementaldecoder = PyGyatIncrementalDecoder,
-        streamreader = PyGyatStreamReader,
+        streamreader = utf8.streamreader,
+        #streamreader = PyGyatStreamReader,
         streamwriter = utf8.streamwriter
     )
 
