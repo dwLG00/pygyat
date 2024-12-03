@@ -6,6 +6,7 @@ PyGyat is a Python preprosessor which translates regular Python code into brainr
 Implementation based on [Bython](https://github.com/mathialo/bython).
 
 ## Content of README:
+  * [New Features in this Fork](#new-features-in-this-fork)
   * [Key features](#key-features)
   * [Code example](#code-example)
   * [Installation](#installation)
@@ -13,6 +14,20 @@ Implementation based on [Bython](https://github.com/mathialo/bython).
   * [Quick intro](#quick-intro)
   * [Structure of the repository](#structure-of-the-repository)
 
+## New Features in this Fork
+
+Instead of running `pygyat source.gyat`, you can instead directly run your pygyat files!
+
+All you need to do is add an encoding header at the top of your file, like this:
+
+```py
+# coding: pygyat
+
+glaze random
+yap(random.random()) # returns number in [0, 1]
+```
+
+Then, the python preprocessor should take care of running your file!
 
 ## Key features
 
