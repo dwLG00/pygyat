@@ -21,17 +21,16 @@ def pygyat_decode(input, errors='strict'):
 
 class PyGyatIncrementalDecoder(utf_8.IncrementalDecoder):
     def decode(self, input, final=False):
-        if input != b'':
-            print('call %s' % input, final)
         self.buffer += input
         if final:
-            print('final called with %s' % input)
             buff = self.buffer
             #return super().decode(buff, final=True)
-            retval = super(PyGyatIncrementalDecoder, self).decode(pygyat_transform_string(buff.decode('utf-8')), final=True)
-            print(retval)
+            #print('buffer: %s' % buff)
+            gyatt_transformed = pygyat_transform_string(buff.decode('utf-8')).decode('utf-8')
             self.buffer = b''
-            return retval
+            if gyatt_transformed == '\n':
+                return ''
+            return gyatt_transformed
         else:
             return ''
 
@@ -51,9 +50,9 @@ def search_function(encoding):
         incrementalencoder = utf8.incrementalencoder,
         #incrementaldecoder = utf8.incrementaldecoder,
         incrementaldecoder = PyGyatIncrementalDecoder,
-        streamreader = utf8.streamreader,
-        #streamreader = PyGyatStreamReader,
-        streamwriter = utf8.streamwriter
+        #streamreader = utf8.streamreader,
+        streamreader = PyGyatStreamReader,
+        #streamwriter = utf8.streamwriter
     )
 
 codecs.register(search_function)
